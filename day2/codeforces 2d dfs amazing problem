@@ -1,0 +1,134 @@
+/*author - Aryan Mittal*/
+#include<bits/stdc++.h>
+using namespace std;
+
+#pragma GCC push_options
+#pragma GCC optimize ("unroll-loops")
+
+
+#define print(a)        for (auto x : a) cout << x << " "; cout << endl
+#define print_upto(a,n)        for(int i=0;i<n;i++)    cout<<a[i]<<" "; cout<<endl
+#define take(x,n)           for(int i=0;i<n;i++)  cin>>x[i];
+
+#define watch(x) cout << (#x) << " is " << (x) << "\n"
+#define watch2(x,y) cout <<(#x)<<" is "<<(x)<<" and "<<(#y)<<" is "<<(y)<<"\n"
+
+#define ll long long
+#define pie_value 3.14159265358979323846
+
+ll r, c;
+ll vis[52][52];
+ll block[52][52];
+
+void dfs(ll i, ll j) {
+
+	if (i < 0 || j < 0 || i >= r || j >= c || vis[i][j] == 1 || block[i][j] == 1)
+		return ;
+
+	vis[i][j] = 1;
+
+	if (i < r - 1)
+		dfs(i + 1, j);
+	if (i > 0)
+		dfs(i - 1, j);
+	if (j > 0)
+		dfs(i, j - 1);
+	if (j < c - 1)
+		dfs(i, j + 1);
+}
+
+int main() {
+
+	// Use ctrl+shift+b ( second option )
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+	freopen("error.txt" , "w" , stderr);
+#endif
+
+	ll t;
+	cin >> t;
+
+
+	while (t--) {
+
+		cin >> r >> c;
+
+		memset(vis, 0, sizeof(vis));
+		memset(block, 0, sizeof(block));
+
+		char a[52][52];
+		for (ll i = 0; i < r; i++) {
+			for (ll j = 0; j < c; j++) {
+				cin >> a[i][j];
+			}
+		}
+
+		ll flag = 1;
+		for (ll i = 0; i < r; i++) {
+			for (ll j = 0; j < c; j++) {
+
+				if (block[i][j] == 0 && (a[i][j] == '#' || a[i][j] == 'B')) {
+					block[i][j] = 1;
+				}
+
+				if (a[i][j] == 'B') {
+					if (i < r - 1)
+						block[i + 1][j] = 1;
+					if (j < c - 1)
+						block[i][j + 1] = 1;
+					if (i > 0)
+						block[i - 1][j] = 1;
+					if (j > 0)
+						block[i][j - 1] = 1;
+				}
+
+				if (a[i][j] == 'B') {
+					if (i < r - 1 && a[i + 1][j] == 'G')
+						flag = 0;
+					if (j < c - 1 && a[i][j + 1] == 'G')
+						flag = 0;
+					if (i > 0 && a[i - 1][j] == 'G')
+						flag = 0;
+					if (j > 0 && a[i][j - 1] == 'G')
+						flag = 0;
+				}
+
+			}
+		}
+
+		if (flag == 0) {
+			cout << "No" << "\n";
+		} else {
+			ll flag = 1;
+			dfs(r - 1, c - 1);
+
+			for (ll i = 0; i < r; i++) {
+				for (ll j = 0; j < c; j++) {
+					if (a[i][j] == 'G' && vis[i][j] != 1) {
+						flag = 0;
+						break;
+					}
+				}
+
+				if (flag == 0)
+					break;
+			}
+
+			if (flag == 0) {
+				cout << "No" << "\n";
+			} else {
+				cout << "Yes" << "\n";
+			}
+		}
+
+	}
+
+
+
+	return 0;
+}
